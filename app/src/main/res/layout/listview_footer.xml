@@ -12,8 +12,8 @@
     <com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar
         app:mlpb_progress_stoke_width="3dp"
         app:mlpb_progress_color="#566da9"
-        android:layout_width="100dp"
-        android:layout_height="100dp" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <!--    <ProgressBar
             style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Inverse"

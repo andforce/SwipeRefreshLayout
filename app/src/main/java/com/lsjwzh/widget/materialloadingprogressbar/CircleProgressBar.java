@@ -159,6 +159,10 @@ public class CircleProgressBar extends ImageView {
         mTextPaint.setAntiAlias(true);
         a.recycle();
         mProgressDrawable = new MaterialProgressDrawable(getContext(), this);
+        setColorSchemeResources(R.color.google_blue,
+                R.color.google_green,
+                R.color.google_red,
+                R.color.google_yellow);
         super.setImageDrawable(mProgressDrawable);
     }
 
