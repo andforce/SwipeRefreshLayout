@@ -4,9 +4,6 @@ An extension of android.support.v4.widget.SwipeRefreshLayout with loading more f
 ## Note ##
 It only serves for ListView now.
 
-## Demo ##
-[Download apk](/demo.apk)
-
 ![Gif](/demo.gif)
 
 ## Use ##
@@ -51,43 +48,39 @@ Customize your footer layout to indicate a loading progress like:
 ````
 Get instance and use it.
 ````java
-    RefreshLayout mRefreshLayout;
-    ListView mListView;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        mRefreshLayout = (RefreshLayout) findViewById(R.id.swipe_container);
-        mListView = (ListView) findViewById(R.id.list);
-        mRefreshLayout.setFooterView(this, mListView, R.layout.listview_footer);
-
-        mRefreshLayout.setColorSchemeResources(R.color.google_blue,
-                R.color.google_green,
-                R.color.google_red,
-                R.color.google_yellow);
-
-        mRefreshLayout.setOnRefreshListener(new RefreshLayout.OnRefreshListener() {
+mRefreshLayout.setOnRefreshLoadMoreListener(new RefreshLayout.OnRefreshLoadMoreListener() {
             @Override
             public void onRefresh() {
-	         // start to refresh
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        values.add(0, "Swipe Down to Refresh " + values.size());
+                        mArrayAdapter.notifyDataSetChanged();
+                        mRefreshLayout.setRefreshing(false);
+                    }
+                }, 2000);
             }
-        });
-        mRefreshLayout.setOnLoadListener(new RefreshLayout.OnLoadListener() {
+
             @Override
-            public void onLoad() {
-                // start to load   
+            public void onLoadMore() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        values.add("Swipe Up to Load More "+ values.size());
+                        mArrayAdapter.notifyDataSetChanged();
+                        mRefreshLayout.setLoading(false);
+                    }
+                }, 2000);
             }
         });
-    }
 ````
 
 ## Thanks ##
-[SwipeRefreshLayout](https://developer.android.com/reference/android/support/v4/widget/SwipeRefreshLayout.html)
+[SwipeRefreshLayout](https://github.com/Demievil/SwipeRefreshLayout)
+[MaterialLoadingProgressBar](https://github.com/lsjwzh/MaterialLoadingProgressBar)
 
 ## License ##
-> Copyright (c) 2015 Demievil
+> Copyright (c) 2015 andforce
 > 
 > Licensed under the Apache License, Version 2.0 (the "License");
 > you may not use this file except in compliance with the License.
