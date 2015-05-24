@@ -21,7 +21,7 @@ public class MainActivity extends ActionBarActivity {
 
         mRefreshLayout = (RefreshLayout) findViewById(R.id.swipe_container);
         mListView = (ListView) findViewById(R.id.list);
-        mRefreshLayout.setFooterView(this, mListView, R.layout.listview_footer);
+        mRefreshLayout.setFooterView(R.layout.listview_footer);
 
         values = new ArrayList<>();
         for (int i = 0; i < 15; i++) {

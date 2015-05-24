@@ -31,19 +31,35 @@ public class RefreshLayout extends SwipeRefreshLayout {
     }
 
     //set the footer of the ListView with a ProgressBar in it
-    public void setFooterView(Context context, ListView mListView, int layoutId) {
-        mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
-        mListViewFooter = LayoutInflater.from(context).inflate(layoutId, null,
-                false);
+    public void setFooterView(int layoutId) {
+        mTouchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
+        mListViewFooter = LayoutInflater.from(getContext()).inflate(layoutId, null,false);
+        ensureListView();
         mListView.addFooterView(mListViewFooter);
         mListView.setFooterDividersEnabled(false);
-        this.mListView = mListView;
     }
 
     @Override
     public void setRefreshing(boolean refreshing) {
         super.setRefreshing(refreshing);
+    }
 
+    @Override
+    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        ensureListView();
+    }
+
+    private void ensureListView() {
+        if (mListView == null){
+            for (int i = 0; i < getChildCount(); i++) {
+                View child = getChildAt(i);
+                if (child instanceof ListView) {
+                    mListView = (ListView) child;
+                    break;
+                }
+            }
+        }
     }
 
     @Override
