@@ -26,26 +26,6 @@ Use it in your layout xml
 </com.demievil.swiperefreshlayout.RefreshLayout>
 ````
 
-Customize your footer layout to indicate a loading progress like:
-````xml
-<RelativeLayout 
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#FFFFFF"
-    android:gravity="center"
-    android:padding="8dp"
-    android:visibility="gone">
-
-    <ProgressBar
-        style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Inverse"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:indeterminate="true" />
-
-</RelativeLayout>
-````
 Get instance and use it.
 ````java
 mRefreshLayout.setOnRefreshLoadMoreListener(new RefreshLayout.OnRefreshLoadMoreListener() {
