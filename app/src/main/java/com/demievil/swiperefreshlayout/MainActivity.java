@@ -35,10 +35,9 @@ public class MainActivity extends ActionBarActivity {
                 R.color.google_red,
                 R.color.google_yellow);
 
-        mRefreshLayout.setOnRefreshListener(new RefreshLayout.OnRefreshListener() {
+        mRefreshLayout.setOnRefreshLoadMoreListener(new RefreshLayout.OnRefreshLoadMoreListener() {
             @Override
             public void onRefresh() {
-
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -48,10 +47,9 @@ public class MainActivity extends ActionBarActivity {
                     }
                 }, 2000);
             }
-        });
-        mRefreshLayout.setOnLoadListener(new RefreshLayout.OnLoadListener() {
+
             @Override
-            public void onLoad() {
+            public void onLoadMore() {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -62,5 +60,6 @@ public class MainActivity extends ActionBarActivity {
                 }, 2000);
             }
         });
+
     }
 }
