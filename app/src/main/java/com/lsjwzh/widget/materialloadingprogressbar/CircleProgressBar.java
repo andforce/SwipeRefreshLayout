@@ -65,7 +65,7 @@ public class CircleProgressBar extends ImageView {
     private int mArrowHeight;
     private int mProgress;
     private int mMax;
-    private int mDiameter;
+    private int mDiameter = -1;
     private int mInnerRadius;
     private Paint mTextPaint;
     private int mTextColor;
@@ -76,6 +76,8 @@ public class CircleProgressBar extends ImageView {
     private ShapeDrawable mBgCircle;
     private boolean mCircleBackgroundEnabled;
     private int[] mColors = new int[]{Color.BLACK};
+
+    final float density = getContext().getResources().getDisplayMetrics().density;
 
     public CircleProgressBar(Context context) {
         super(context);
@@ -117,7 +119,6 @@ public class CircleProgressBar extends ImageView {
 //        <enum name="visible" value="0"/>
 //        <enum name="invisible" value="1"/>
 //        </attr>
-        final float density = getContext().getResources().getDisplayMetrics().density;
 
         mBackGroundColor = a.getColor(
                 R.styleable.CircleProgressBar_mlpb_background_color, DEFAULT_CIRCLE_BG_LIGHT);
@@ -169,29 +170,21 @@ public class CircleProgressBar extends ImageView {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        if (!elevationSupported()) {
-            setMeasuredDimension(getMeasuredWidth() + mShadowRadius * 2, getMeasuredHeight()
-                    + mShadowRadius * 2);
-        }
-    }
+//        if (!elevationSupported()) {
+//            setMeasuredDimension(getMeasuredWidth() + mShadowRadius * 2, getMeasuredHeight()
+//                    + mShadowRadius * 2);
+//        }
+        if (mDiameter <= 0 && getMeasuredHeight() > 0 && getMeasuredWidth() > 0){
 
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
-        final float density = getContext().getResources().getDisplayMetrics().density;
-        mDiameter = Math.min(getMeasuredWidth(), getMeasuredHeight());
-        if (mDiameter <= 0) {
-            mDiameter = (int) density * DEFAULT_CIRCLE_DIAMETER;
-        }
-        if (getBackground() == null && mCircleBackgroundEnabled) {
-            final int shadowYOffset = (int) (density * Y_OFFSET);
-            final int shadowXOffset = (int) (density * X_OFFSET);
-            mShadowRadius = (int) (density * SHADOW_RADIUS);
+            mDiameter = Math.min(getMeasuredWidth(), getMeasuredHeight()) ;
+//            if (mDiameter <= 0) {
+//                mDiameter = (int) density * DEFAULT_CIRCLE_DIAMETER;
+//            }
+            if (getBackground() == null && mCircleBackgroundEnabled) {
+                final int shadowYOffset = (int) (density * Y_OFFSET);
+                final int shadowXOffset = (int) (density * X_OFFSET);
+                mShadowRadius = (int) (density * SHADOW_RADIUS);
 
-            if (elevationSupported()) {
-                mBgCircle = new ShapeDrawable(new OvalShape());
-                ViewCompat.setElevation(this, SHADOW_ELEVATION * density);
-            } else {
                 OvalShape oval = new OvalShadow(mShadowRadius, mDiameter - mShadowRadius * 2);
                 mBgCircle = new ShapeDrawable(oval);
                 ViewCompat.setLayerType(this, ViewCompat.LAYER_TYPE_SOFTWARE, mBgCircle.getPaint());
@@ -200,27 +193,33 @@ public class CircleProgressBar extends ImageView {
                 final int padding = (int) mShadowRadius;
                 // set padding so the inner image sits correctly within the shadow.
                 setPadding(padding, padding, padding, padding);
+
+                mBgCircle.getPaint().setColor(mBackGroundColor);
+                setBackgroundDrawable(mBgCircle);
             }
-            mBgCircle.getPaint().setColor(mBackGroundColor);
-            setBackgroundDrawable(mBgCircle);
+            mProgressDrawable.setBackgroundColor(mBackGroundColor);
+            mProgressDrawable.setColorSchemeColors(mColors);
+            mProgressDrawable.setSizeParameters(mDiameter, mDiameter,
+                    mInnerRadius <= 0 ? (mDiameter - mProgressStokeWidth * 2) / 4 : mInnerRadius,
+                    mProgressStokeWidth,
+                    mArrowWidth < 0 ? mProgressStokeWidth * 4 : mArrowWidth,
+                    mArrowHeight < 0 ? mProgressStokeWidth * 2 : mArrowHeight);
+            if (isShowArrow()) {
+                mProgressDrawable.setArrowScale(1f);
+                mProgressDrawable.showArrow(true);
+            }
+            super.setImageDrawable(null);
+            super.setImageDrawable(mProgressDrawable);
+            mProgressDrawable.setAlpha(255);
+            if(getVisibility()==VISIBLE) {
+                mProgressDrawable.start();
+            }
         }
-        mProgressDrawable.setBackgroundColor(mBackGroundColor);
-        mProgressDrawable.setColorSchemeColors(mColors);
-        mProgressDrawable.setSizeParameters(mDiameter, mDiameter,
-                mInnerRadius <= 0 ? (mDiameter - mProgressStokeWidth * 2) / 4 : mInnerRadius,
-                mProgressStokeWidth,
-                mArrowWidth < 0 ? mProgressStokeWidth * 4 : mArrowWidth,
-                mArrowHeight < 0 ? mProgressStokeWidth * 2 : mArrowHeight);
-        if (isShowArrow()) {
-            mProgressDrawable.setArrowScale(1f);
-            mProgressDrawable.showArrow(true);
-        }
-        super.setImageDrawable(null);
-        super.setImageDrawable(mProgressDrawable);
-        mProgressDrawable.setAlpha(255);
-        if(getVisibility()==VISIBLE) {
-            mProgressDrawable.start();
-        }
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
     }
 
     @Override
